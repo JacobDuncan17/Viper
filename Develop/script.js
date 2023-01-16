@@ -1,66 +1,69 @@
 // Assignment Code
-var generateBtn = document.querySelector("#generate");
-var char = {lowercase_letters:"abcdefghijklmnopqrstuvwxyz", uppercase_letters:"ABCDEFGHIJKLMNOPQRSTUVWXYZ", numeric:"0123456789", special:"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~"};
+document.querySelector("#generate").addEventListener("click", writePassword);
+
+var specialc = ["!", "%", "&", ",", "*", "+", "-", ".", "/", "<", ">", "?","~"];
+var numerical = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+var lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+var upper = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
  
 // Ask questions to decide whats included in the password
 function questions(){
-  var number = (function ask() {
-    var characters1 = prompt('Number from 1 to 100:');
-    return isNaN(characters1) || +characters1 > 100 || +characters1 < 1 ? ask() : characters1;
+  var length = (function ask() {
+    var characters1 = prompt('Number from 8 to 128:');
+    return isNaN(characters1) || +characters1 > 128 || +characters1 < 8 ? ask() : characters1;
   }());
 
-  var specialc = window.confirm("Would you like to include special characters?")
-  var numerical = window.confirm("Would you like to include numbers?")
-  var lowercase = window.confirm("Would you like to include lowercase letters?")
-  var uppercase = window.confirm("Would you like to include uppercase letters?")
-  while(specialc === false && numerical === false && lowercase === false && uppercase === false) {
+  var specialc1 = window.confirm("Would you like to include special characters?")
+  var numerical1 = window.confirm("Would you like to include numbers?")
+  var lowercase1 = window.confirm("Would you like to include lowercase letters?")
+  var uppercase1 = window.confirm("Would you like to include uppercase letters?")
+  while(specialc1 === false && numerical1 === false && lowercase1 === false && uppercase1 === false) {
     alert("You must choose at least one");
-    var specialc = confirm("Click OK to confirm if you would like to include special characters");
-    var numerical = confirm("Click OK to confirm if you would like to include numeric characters");    
-    var lowercase = confirm("Click OK to confirm if you would like to include lowercase characters");
-    var uppercase = confirm("Click OK to confirm if you would like to include uppercase characters");
+    var specialc1 = confirm("Click OK to confirm if you would like to include special characters");
+    var numerical1 = confirm("Click OK to confirm if you would like to include numeric characters");    
+    var lowercase1 = confirm("Click OK to confirm if you would like to include lowercase characters");
+    var uppercase1 = confirm("Click OK to confirm if you would like to include uppercase characters");
   }
-  var answers1 = [number, specialc, numerical, lowercase, uppercase];
+  var answers1 = [specialc1, numerical1, lowercase1, uppercase1, length];
   return answers1;
 }
+// Generates password based on answers to the questions
+function generatePassword(answers){
+  
+  var password = []
+  var length = answers[4];
+  if (answers[0] === true) {
+    password = password.concat(specialc)
+  }
 
-function generatePassword(answers, char){
   if (answers[1] === true) {
-    console.log("Password will include special characters");
+    password = password.concat(numerical)
   }
-  else {
-    delete char.special
+    
+  if (answers[2] === true) {
+    password = password.concat(lower)
   }
 
-  if (answers[2] === true) {
-    console.log("Password will include numbers");
-  }
-  else {
-    delete char.numeric
-  }
   if (answers[3] === true) {
-    console.log("Password will include lowercase letters");
+    password = password.concat(upper)
   }
-  else {
-    delete char.lowercase_letters
+
+  var generatedPassword = ""
+
+  for (var i = 0; i < length; i++) {
+    generatedPassword = generatedPassword + password[Math.floor(Math.random() * password.length)];
   }
-  if (answers[4] === true) {
-    console.log("Password will include uppercase letters");
-  }
-  else {
-    delete char.uppercase_letters
-  }
+  return generatedPassword;
 }
 
+
 function writePassword() {
-  
   var answers = questions();
   var password = generatePassword(answers);
   var passwordText = document.querySelector("#password");
-
-  passwordText.value = password;
-
+  
+  passwordText.textContent = password
 }
 
-// Add event listener to generate button
-generateBtn.addEventListener("click", writePassword);
+
+
